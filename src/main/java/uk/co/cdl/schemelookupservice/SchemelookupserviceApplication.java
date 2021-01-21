@@ -9,5 +9,4 @@ public class SchemelookupserviceApplication {
     public static void main(String[] args) {
         SpringApplication.run(SchemelookupserviceApplication.class, args);
     }
-
 }
