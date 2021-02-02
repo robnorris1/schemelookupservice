@@ -43,6 +43,11 @@ public class Scheme {
         this.schemeCode = schemeCode;
     }
 
+    public Scheme withSchemeCode(String schemeCode){
+        this.schemeCode = schemeCode;
+        return this;
+    }
+
     public String getSchemeName() {
         return schemeName;
     }
