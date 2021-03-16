@@ -2,6 +2,7 @@ package uk.co.cdl.schemelookupservice.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Scheme {
@@ -29,7 +32,12 @@ public class Scheme {
 
     private String companyGroupCode;
 
-    @ManyToMany
+    private String brokerStatus;
+
+    private int companyNumber;
+
+    @JsonProperty(value = "enrichments")
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "scheme_enchrichment",
             joinColumns = {@JoinColumn(name = "fk_scheme")}, inverseJoinColumns = {@JoinColumn(name = "fk_enrichment")})
@@ -43,7 +51,7 @@ public class Scheme {
         this.schemeCode = schemeCode;
     }
 
-    public Scheme withSchemeCode(String schemeCode){
+    public Scheme withSchemeCode(String schemeCode) {
         this.schemeCode = schemeCode;
         return this;
     }
@@ -88,4 +96,27 @@ public class Scheme {
         this.companyGroupCode = companyGroupCode;
     }
 
+    public String getBrokerStatus() {
+        return brokerStatus;
+    }
+
+    public void setBrokerStatus(String brokerStatus) {
+        this.brokerStatus = brokerStatus;
+    }
+
+    public List<Enrichment> getEnrichments() {
+        return enrichments;
+    }
+
+    public void setEnrichments(List<Enrichment> enrichments) {
+        this.enrichments = enrichments;
+    }
+
+    public int getCompanyNumber() {
+        return companyNumber;
+    }
+
+    public void setCompanyNumber(int companyNumber) {
+        this.companyNumber = companyNumber;
+    }
 }

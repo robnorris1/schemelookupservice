@@ -16,17 +16,20 @@ public class SchemeController {
     @Autowired
     SchemeService schemeService;
 
+    public SchemeController() {
+    }
+
     @GetMapping(path = "/listScheme", produces = "application/json")
     public ResponseEntity<Response> getAllSchemes() {
         return ResponseEntity.ok(schemeService.getAllSchemes());
     }
 
-    @GetMapping(path = "/listScheme", produces = "application/json")
+    @GetMapping(path = "/findScheme", produces = "application/json")
     public ResponseEntity<Response> getBySchemeCode(String schemeCode) {
         return ResponseEntity.ok(schemeService.getBySchemeCode(schemeCode));
     }
 
-    @GetMapping(path = "/listScheme", produces = "application/json")
+    @GetMapping(path = "/findSchemes", produces = "application/json")
     public ResponseEntity<Response> searchScheme(Scheme searchScheme) {
         return ResponseEntity.ok(schemeService.findSchemes(searchScheme));
     }

@@ -16,19 +16,24 @@ public class SchemeRepositoryService {
     @Autowired
     SchemeRepository schemeRepository;
 
-    public List<Scheme> findSchemes(Scheme searchScheme){
+    public List<Scheme> findSchemes(Scheme searchScheme) {
         Example<Scheme> example = Example.of(searchScheme);
         return schemeRepository.findAll(example);
     }
 
     @Transactional
-    public Optional<Scheme> getBySchemeCode(String schemeCode){
+    public Optional<Scheme> getBySchemeCode(String schemeCode) {
         Example<Scheme> example = Example.of(new Scheme().withSchemeCode(schemeCode));
         return schemeRepository.findOne(example);
     }
 
     @Transactional
-    public List<Scheme> getAllSchemes(){
+    public List<Scheme> getAllSchemes() {
         return schemeRepository.findAll();
+    }
+
+    @Transactional
+    public void saveSchemes(List<Scheme> schemes){
+        schemeRepository.saveAll(schemes);
     }
 }
