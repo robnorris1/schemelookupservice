@@ -1,6 +1,7 @@
 package uk.co.cdl.schemelookupservice.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -118,5 +119,36 @@ public class Scheme {
 
     public void setCompanyNumber(int companyNumber) {
         this.companyNumber = companyNumber;
+    }
+
+    public boolean sameSchemeCode(Scheme otherScheme){
+        return this.schemeCode.equals(otherScheme.getSchemeCode());
+    }
+
+    public Scheme update(Scheme newScheme) {
+        this.schemeCode = newScheme.getSchemeCode();
+        this.schemeName = newScheme.getSchemeName();
+        this.underwriterCode = newScheme.getUnderwriterCode();
+        this.underwriterName = newScheme.getUnderwriterName();
+        this.insurerSCID = newScheme.getInsurerSCID();
+        this.companyGroupCode = newScheme.getCompanyGroupCode();
+        this.brokerStatus = newScheme.getBrokerStatus();
+        this.companyNumber = newScheme.getCompanyNumber();
+        this.enrichments = newScheme.getEnrichments();
+
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Scheme scheme = (Scheme) o;
+        return companyNumber == scheme.companyNumber && Objects.equals(schemeCode, scheme.schemeCode) && Objects.equals(schemeName, scheme.schemeName) && Objects.equals(underwriterCode, scheme.underwriterCode) && Objects.equals(underwriterName, scheme.underwriterName) && Objects.equals(insurerSCID, scheme.insurerSCID) && Objects.equals(companyGroupCode, scheme.companyGroupCode) && Objects.equals(brokerStatus, scheme.brokerStatus) && Objects.equals(enrichments, scheme.enrichments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, schemeCode, schemeName, underwriterCode, underwriterName, insurerSCID, companyGroupCode, brokerStatus, companyNumber, enrichments);
     }
 }

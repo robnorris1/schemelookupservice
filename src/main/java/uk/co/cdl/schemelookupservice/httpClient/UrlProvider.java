@@ -22,6 +22,7 @@ public class UrlProvider {
             case HH:
                 return Optional.ofNullable(getHouseQuotesengineUrl());
             default:
+                //TODO: add exception
                 return null;
         }
     }

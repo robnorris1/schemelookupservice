@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.co.cdl.schemelookupservice.model.Scheme;
 
+//TODO: add docs
+
 @Service
 public class SchemeRepositoryService {
 
@@ -22,18 +24,29 @@ public class SchemeRepositoryService {
     }
 
     @Transactional
-    public Optional<Scheme> getBySchemeCode(String schemeCode) {
+    public Optional<Scheme> findBySchemeCode(String schemeCode) {
         Example<Scheme> example = Example.of(new Scheme().withSchemeCode(schemeCode));
         return schemeRepository.findOne(example);
     }
 
     @Transactional
-    public List<Scheme> getAllSchemes() {
+    public List<Scheme> findAllSchemes() {
         return schemeRepository.findAll();
     }
 
     @Transactional
-    public void saveSchemes(List<Scheme> schemes){
-        schemeRepository.saveAll(schemes);
+    public void saveAll(List<Scheme> schemes) {
+        if (schemes != null && !schemes.isEmpty()) {
+            schemeRepository.saveAll(schemes);
+        }
+    }
+
+    /**
+     * Deletes all the scheme records, provided in the parameters, from the database
+     *
+     * @param schemes the schemes to be deleted
+     */
+    public void deleteAll(List<Scheme> schemes) {
+        schemeRepository.deleteAll(schemes);
     }
 }
