@@ -37,6 +37,8 @@ public class Scheme {
 
     private int companyNumber;
 
+    private String policyType;
+
     @JsonProperty(value = "enrichments")
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -121,7 +123,15 @@ public class Scheme {
         this.companyNumber = companyNumber;
     }
 
-    public boolean sameSchemeCode(Scheme otherScheme){
+    public String getPolicyType() {
+        return policyType;
+    }
+
+    public void setPolicyType(String policyType) {
+        this.policyType = policyType;
+    }
+
+    public boolean sameSchemeCode(Scheme otherScheme) {
         return this.schemeCode.equals(otherScheme.getSchemeCode());
     }
 
@@ -144,11 +154,16 @@ public class Scheme {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Scheme scheme = (Scheme) o;
-        return companyNumber == scheme.companyNumber && Objects.equals(schemeCode, scheme.schemeCode) && Objects.equals(schemeName, scheme.schemeName) && Objects.equals(underwriterCode, scheme.underwriterCode) && Objects.equals(underwriterName, scheme.underwriterName) && Objects.equals(insurerSCID, scheme.insurerSCID) && Objects.equals(companyGroupCode, scheme.companyGroupCode) && Objects.equals(brokerStatus, scheme.brokerStatus) && Objects.equals(enrichments, scheme.enrichments);
+        return companyNumber == scheme.companyNumber && Objects.equals(schemeCode, scheme.schemeCode) && Objects.equals(schemeName, scheme.schemeName) && Objects.equals(underwriterCode, scheme.underwriterCode) && Objects.equals(underwriterName, scheme.underwriterName) && Objects.equals(insurerSCID, scheme.insurerSCID) && Objects.equals(companyGroupCode, scheme.companyGroupCode) && Objects.equals(brokerStatus, scheme.brokerStatus) && Objects.equals(enrichments, scheme.enrichments) && Objects.equals(policyType, scheme.policyType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, schemeCode, schemeName, underwriterCode, underwriterName, insurerSCID, companyGroupCode, brokerStatus, companyNumber, enrichments);
+        return Objects.hash(id, schemeCode, schemeName, underwriterCode, underwriterName, insurerSCID, companyGroupCode, brokerStatus, companyNumber, enrichments, policyType);
+    }
+
+    public Scheme withPolicyType(String policyType) {
+        this.policyType = policyType;
+        return this;
     }
 }

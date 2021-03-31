@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,14 +25,14 @@ public class SchemeRepositoryService {
     }
 
     @Transactional
-    public Optional<Scheme> findBySchemeCode(String schemeCode) {
-        Example<Scheme> example = Example.of(new Scheme().withSchemeCode(schemeCode));
+    public Optional<Scheme> findBySchemeCode(String schemeCode, String policyType) {
+        Example<Scheme> example = Example.of(new Scheme().withSchemeCode(schemeCode).withPolicyType(policyType), ExampleMatcher.matchingAll().withIgnorePaths("id","companyNumber"));
         return schemeRepository.findOne(example);
     }
 
     @Transactional
-    public List<Scheme> findAllSchemes() {
-        return schemeRepository.findAll();
+    public List<Scheme> findAllSchemes(String policyType) {
+        return schemeRepository.findAllSchemesByPolicyType(policyType);
     }
 
     @Transactional

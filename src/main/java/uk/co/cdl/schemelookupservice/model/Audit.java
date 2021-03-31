@@ -16,8 +16,11 @@ public class Audit {
 
     private Date updated;
 
-    public Audit(Date updated) {
+    private String policyType;
+
+    public Audit(Date updated, String policyType) {
         this.updated = updated;
+        this.policyType = policyType;
     }
 
     public Audit() {
@@ -38,5 +41,13 @@ public class Audit {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
+    }
+
+    public String getPolicyType() {
+        return policyType;
+    }
+
+    public void setPolicyType(String policyType) {
+        this.policyType = policyType;
     }
 }

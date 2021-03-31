@@ -39,22 +39,22 @@ public class SchemeService {
 
     }
 
-    public Response getAllSchemes() {
-        checkAndSyncDatabase(PolicyType.PC);
-        return new Response(schemeRepositoryService.findAllSchemes());
+    public Response getAllSchemes(String policyType) {
+        checkAndSyncDatabase(PolicyType.valueOf(policyType));
+        return new Response(schemeRepositoryService.findAllSchemes(policyType));
 
         //TODO: check if you need to call the QE
     }
 
-    public Response getBySchemeCode(String schemeCode) {
-        checkAndSyncDatabase(PolicyType.PC);
-        return new Response(Collections.singletonList(schemeRepositoryService.findBySchemeCode(schemeCode).orElse(new Scheme())));
+    public Response getBySchemeCode(String schemeCode, String policyType) {
+        checkAndSyncDatabase(PolicyType.valueOf(policyType));
+        return new Response(Collections.singletonList(schemeRepositoryService.findBySchemeCode(schemeCode, policyType).orElse(new Scheme())));
 
         //TODO: check if you need to call the QE
     }
 
     public Response findSchemes(Scheme searchScheme) {
-        checkAndSyncDatabase(PolicyType.PC);
+        checkAndSyncDatabase(PolicyType.valueOf(searchScheme.getPolicyType()));
         return new Response(schemeRepositoryService.findSchemes(searchScheme));
 
         //TODO: check if you need to call the QE
@@ -65,8 +65,8 @@ public class SchemeService {
     }
 
     private void syncDatabase(PolicyType policyType) {
-        List<Scheme> schemesFromDatabase = schemeRepositoryService.findAllSchemes();
-        List<Scheme> schemesFromEngine = this.getSchemesFromEngine(policyType);
+        List<Scheme> schemesFromDatabase = schemeRepositoryService.findAllSchemes(policyType.getValue());
+        List<Scheme> schemesFromEngine = this.getSchemesFromEngine(policyType).stream().map(x -> x.withPolicyType(policyType.getValue())).collect(Collectors.toList());
 
         //helpers
         Predicate<Scheme> findScheme = scheme -> schemesFromDatabase.stream().anyMatch(s -> s.sameSchemeCode(scheme));
@@ -87,7 +87,7 @@ public class SchemeService {
         Map<Boolean, List<Scheme>> splitSchemes = schemesFromEngine.stream()
                 .collect(Collectors.groupingBy(findScheme::test, HashMap::new, Collectors.toList()));
 
-        List<Scheme> existingSchemes = splitSchemes.get(Boolean.TRUE);
+        List<Scheme> existingSchemes = splitSchemes.get(Boolean.TRUE) != null ? splitSchemes.get(Boolean.TRUE): Collections.emptyList();
         List<Scheme> newSchemes = splitSchemes.get(Boolean.FALSE);
 
         List<Scheme> updatedSchemes = existingSchemes.stream()
@@ -103,12 +103,12 @@ public class SchemeService {
         schemeRepositoryService.saveAll(newSchemes);
         schemeRepositoryService.saveAll(updatedSchemes);
 
-        auditRepository.save(new Audit(new Date(System.currentTimeMillis())));
+        auditRepository.save(new Audit(new Date(System.currentTimeMillis()), policyType.getValue()));
     }
 
     private void checkAndSyncDatabase(PolicyType policyType) {
         LocalDate localDate = LocalDate.now();
-        if(auditRepository.findAllWhereUpdatedAfter(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())).isEmpty()){
+        if(auditRepository.findAllWhereUpdatedAfter(Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()), policyType.getValue()).isEmpty()){
             syncDatabase(policyType);
         }
     }

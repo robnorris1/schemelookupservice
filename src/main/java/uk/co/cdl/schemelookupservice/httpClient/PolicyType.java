@@ -4,11 +4,15 @@ public enum PolicyType {
     PC("PC"),
     GV("GV"),
     MC("MC"),
-    HH("HC");
+    HC("HC");
 
     private String policyType;
 
     PolicyType(String policyType) {
         this.policyType = policyType;
+    }
+
+    public String getValue(){
+        return this.policyType;
     }
 }

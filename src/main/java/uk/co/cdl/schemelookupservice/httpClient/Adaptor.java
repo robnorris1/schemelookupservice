@@ -9,6 +9,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import uk.co.cdl.schemelookupservice.model.Request;
 import uk.co.cdl.schemelookupservice.model.Scheme;
 
 @Service
@@ -30,7 +31,9 @@ public class Adaptor {
     public List<Scheme> getSchemes(PolicyType policyType){
         String url = this.urlProvider.getBaseUrl(policyType).orElse("");
         RestTemplate restTemplate = this.restTemplateBuilder.build();
-        String httpResponse = restTemplate.getForEntity(url, String.class).getBody();
+        Request request = new Request();
+        request.setPolicyType(policyType.getValue());
+        String httpResponse = restTemplate.postForObject(url, request, String.class);
         List<Scheme> schemes = null;
         try {
             schemes = jsonMapper.readValue(httpResponse, jsonMapper.getTypeFactory().constructCollectionType(List.class, Scheme.class));

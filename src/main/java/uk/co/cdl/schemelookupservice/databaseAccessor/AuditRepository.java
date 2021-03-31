@@ -11,6 +11,6 @@ import uk.co.cdl.schemelookupservice.model.Audit;
 
 public interface AuditRepository extends JpaRepository<Audit , Integer> {
 
-    @Query("SELECT a FROM Audit a WHERE a.updated >= :yesterday")
-    List<Audit> findAllWhereUpdatedAfter(@Param("yesterday")Date date);
+    @Query("SELECT a FROM Audit a WHERE a.updated >= :yesterday AND a.policyType like :policyType")
+    List<Audit> findAllWhereUpdatedAfter(@Param("yesterday")Date date, @Param("policyType") String policyType);
 }
