@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  app:
+    image: 'schemelookupservice:latest'
+    build:
+      context: .
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=schemeapp
+      - SPRING_DATASOURCE_PASSWORD=password2
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SERVER_PORT=8085
+      - ENGINE_MOTOR_URL=https://strata-motor-quotes-latest.dev.cdlcloud.co.uk/getAllSchemes
+      - ENGINE_HOUSE_URL=https://strata-house-quotes-latest.dev.cdlcloud.co.uk/getAllSchemes
+    ports:
+      - 8085:8085
+
+  postgres:
+    image: postgres:13.1
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - SCHEMA_OWNER=robertn
+      - SCHEMA_OWNER_PASSWORD=password1
+      - APP_USER=schemeApp
+      - APP_PASSWORD=password2
+      - APP_DB_NAME=postgres
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
